@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MatSelectionList } from '@angular/material/list';
 
-import { User } from '../../users.service';
+import { User } from '../users-store.service';
 
 @Component({
   selector: 'app-users-list',

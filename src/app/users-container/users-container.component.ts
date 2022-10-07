@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { of } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
-import { User } from '../users.service';
-import { UsersStoreService } from './users-store.service';
+import { User, UsersStoreService } from './users-store.service';
 
 @Component({
   selector: 'app-users-container',
@@ -11,29 +9,44 @@ import { UsersStoreService } from './users-store.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UsersStoreService],
 })
-export class UsersContainerComponent {
-  deleteDisabled$ = of(false);
-  users$ = of([
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-  ]);
-  selectAll$ = of(false);
+export class UsersContainerComponent implements OnInit {
+  deleteDisabled$ = this.store.deleteDisabled$;
+  selectAll$ = this.store.selectAll$;
+  users$ = this.store.filteredUsers$;
 
   constructor(private store: UsersStoreService) {}
 
-  handleSelectAll($event: boolean) {}
+  ngOnInit(): void {
+    this.store.setState({
+      users: [
+        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'Maria', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'Maria', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'Maria', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'Caroline', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'Caroline', surname: 'Doe', email: 'doe@acme.com' },
+        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
+      ],
+      selectedUsers: [],
+      selectAll: false,
+      searchTerm: '',
+    });
+  }
 
-  handleSearch($event: string) {}
+  handleSelectAll(selectAll: boolean) {
+    this.store.updateSelectAll(selectAll);
+  }
 
-  handleSelectedUsers($event: User[]) {}
+  handleSearch(searchTerm: string) {
+    this.store.updateSearchTerm(searchTerm);
+  }
+
+  handleSelectedUsers(selectedUsers: User[]) {
+    this.store.updateSelectedUsers(selectedUsers);
+  }
 }
