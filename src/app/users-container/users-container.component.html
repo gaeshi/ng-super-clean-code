@@ -10,3 +10,20 @@
   <mat-divider></mat-divider>
   <app-users-list></app-users-list>
 </div>
+
+<!--
+list component:
+@Input() users: User[];
+@Input() set selectAll(selectAll: boolean) {
+if (!this.usersList) return;
+if (selectAll) {
+this.usersList.selectAll();
+this.emitSelectedUsers.emit(this.users);
+} else {
+this.usersList.deselectAll();
+this.emitSelectedUsers.emit([]);
+}
+  }
+
+@Output() emitSelectedUsers = new EventEmitter<User[]>();
+-->
