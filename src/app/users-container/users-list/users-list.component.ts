@@ -17,7 +17,7 @@ import { User } from '../../users.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersListComponent {
-  @Input() users: User[];
+  @Input() users: User[] = [];
   @Input() set selectAll(selectAll: boolean) {
     if (!this.usersList) return;
     if (selectAll) {
@@ -32,23 +32,6 @@ export class UsersListComponent {
   @Output() emitSelectedUsers = new EventEmitter<User[]>();
 
   @ViewChild('usersList') usersList!: MatSelectionList;
-
-  constructor() {
-    this.users = [
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-    ];
-  }
 
   selectionChanged() {
     const selectedUsers = this.usersList.selectedOptions.selected.map(

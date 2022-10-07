@@ -3,34 +3,23 @@
   fxLayoutAlign="start stretch"
   fxLayoutGap="1em"
   class="users-wrapper"
+  *ngIf="{
+    deleteDisabled: deleteDisabled$ | async,
+    users: users$ | async,
+    selectAll: selectAll$ | async
+  } as asyncData"
 >
   <h1>Users</h1>
   <mat-divider></mat-divider>
-  <app-users-actions-panel></app-users-actions-panel>
+  <app-users-actions-panel
+    [deleteDisabled]="asyncData.deleteDisabled!"
+    (emitSelectAll)="handleSelectAll($event)"
+    (emitSearch)="handleSearch($event)"
+  ></app-users-actions-panel>
   <mat-divider></mat-divider>
-  <app-users-list></app-users-list>
+  <app-users-list
+    [users]="asyncData.users!"
+    [selectAll]="asyncData.selectAll!"
+    (emitSelectedUsers)="handleSelectedUsers($event)"
+  ></app-users-list>
 </div>
-
-<!--
-actions component:
-@Input() deleteDisabled = true;
-@Output() emitSelectAll = new EventEmitter<boolean>();
-@Output() emitSearch = new EventEmitter<string>();
--->
-
-<!--
-list component:
-@Input() users: User[];
-@Input() set selectAll(selectAll: boolean) {
-if (!this.usersList) return;
-if (selectAll) {
-this.usersList.selectAll();
-this.emitSelectedUsers.emit(this.users);
-} else {
-this.usersList.deselectAll();
-this.emitSelectedUsers.emit([]);
-}
-  }
-
-@Output() emitSelectedUsers = new EventEmitter<User[]>();
--->
