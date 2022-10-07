@@ -1,14 +1,28 @@
 import { NgModule } from '@angular/core';
+import { MatDividerModule } from '@angular/material/divider';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { UsersActionsPanelComponent } from './users-container/users-actions-panel/users-actions-panel.component';
+import { UsersContainerComponent } from './users-container/users-container.component';
+import { UsersListComponent } from './users-container/users-list/users-list.component';
 
 @NgModule({
   bootstrap: [AppComponent],
-  declarations: [AppComponent],
-  imports: [AppRoutingModule, BrowserAnimationsModule, BrowserModule],
+  declarations: [
+    AppComponent,
+    UsersContainerComponent,
+    UsersListComponent,
+    UsersActionsPanelComponent,
+  ],
+  imports: [
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    MatDividerModule,
+  ],
   providers: [],
 })
 export class AppModule {}
