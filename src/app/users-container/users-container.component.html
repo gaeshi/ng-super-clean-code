@@ -12,6 +12,13 @@
 </div>
 
 <!--
+actions component:
+@Input() deleteDisabled = true;
+@Output() emitSelectAll = new EventEmitter<boolean>();
+@Output() emitSearch = new EventEmitter<string>();
+-->
+
+<!--
 list component:
 @Input() users: User[];
 @Input() set selectAll(selectAll: boolean) {
