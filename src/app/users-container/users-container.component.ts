@@ -10,6 +10,7 @@ import { User, UsersStoreService } from './users-store.service';
   providers: [UsersStoreService],
 })
 export class UsersContainerComponent implements OnInit {
+  canClear$ = this.store.canClear$;
   deleteDisabled$ = this.store.deleteDisabled$;
   isAllSelected$ = this.store.isAllSelected$;
   selectAll$ = this.store.selectAll$;
@@ -37,6 +38,10 @@ export class UsersContainerComponent implements OnInit {
       selectAll: { checked: false },
       searchTerm: '',
     });
+  }
+
+  handleClear() {
+    this.store.clear();
   }
 
   handleSelectAll(selectAll: boolean) {

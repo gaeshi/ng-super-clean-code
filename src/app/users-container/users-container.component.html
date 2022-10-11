@@ -4,6 +4,7 @@
   fxLayoutGap="1em"
   class="users-wrapper"
   *ngIf="{
+    canClear: canClear$ | async,
     deleteDisabled: deleteDisabled$ | async,
     isAllSelected: isAllSelected$ | async,
     users: users$ | async,
@@ -13,10 +14,12 @@
   <h1>Users</h1>
   <mat-divider></mat-divider>
   <app-users-actions-panel
+    [canClear]="asyncData.canClear!"
     [deleteDisabled]="asyncData.deleteDisabled!"
     [isAllSelected]="asyncData.isAllSelected!"
-    (emitSelectAll)="handleSelectAll($event)"
+    (emitClear)="handleClear()"
     (emitSearch)="handleSearch($event)"
+    (emitSelectAll)="handleSelectAll($event)"
   ></app-users-actions-panel>
   <mat-divider></mat-divider>
   <app-users-list

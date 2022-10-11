@@ -49,11 +49,21 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     (filtered, selected) => filtered.length === selected.length
   );
 
+  canClear$: Observable<boolean> = this.select(
+    this.selectedUsers$,
+    this.isAllSelected$,
+    (selected, isAllSelected) => selected.length > 0 && !isAllSelected
+  );
+
   constructor() {
     super();
   }
 
   // updaters:
+  clear() {
+    this.patchState({ selectAll: { checked: false }, selectedUsers: [] });
+  }
+
   updateSelectAll(checked: boolean) {
     this.patchState({ selectAll: { checked } });
   }

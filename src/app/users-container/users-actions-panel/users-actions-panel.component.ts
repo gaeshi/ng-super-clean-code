@@ -17,13 +17,16 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersActionsPanelComponent implements OnInit, OnDestroy {
+  @Input() canClear = true;
   @Input() deleteDisabled = true;
+
   @Input() set isAllSelected(isAllSelected: boolean) {
     this.form.get('selectAll')?.setValue(isAllSelected, { emitEvent: false });
   }
 
-  @Output() emitSelectAll = new EventEmitter<boolean>();
+  @Output() emitClear = new EventEmitter<void>();
   @Output() emitSearch = new EventEmitter<string>();
+  @Output() emitSelectAll = new EventEmitter<boolean>();
 
   unsubscribe = new Subject<void>();
 
@@ -50,5 +53,9 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubscribe.next();
+  }
+
+  clear() {
+    this.emitClear.emit();
   }
 }
