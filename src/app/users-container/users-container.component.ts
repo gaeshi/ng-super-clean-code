@@ -11,6 +11,7 @@ import { User, UsersStoreService } from './users-store.service';
 })
 export class UsersContainerComponent implements OnInit {
   canClear$ = this.store.canClear$;
+  canSelect$ = this.store.canSelect$;
   deleteDisabled$ = this.store.deleteDisabled$;
   isAllSelected$ = this.store.isAllSelected$;
   selectAll$ = this.store.selectAll$;

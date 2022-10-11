@@ -46,13 +46,19 @@ export class UsersStoreService extends ComponentStore<UsersState> {
   isAllSelected$: Observable<boolean> = this.select(
     this.filteredUsers$,
     this.selectedUsers$,
-    (filtered, selected) => filtered.length === selected.length
+    (filtered, selected) =>
+      filtered.length > 0 && filtered.length === selected.length
   );
 
   canClear$: Observable<boolean> = this.select(
     this.selectedUsers$,
     this.isAllSelected$,
     (selected, isAllSelected) => selected.length > 0 && !isAllSelected
+  );
+
+  canSelect$: Observable<boolean> = this.select(
+    this.filteredUsers$,
+    (filtered) => filtered.length > 0
   );
 
   constructor() {

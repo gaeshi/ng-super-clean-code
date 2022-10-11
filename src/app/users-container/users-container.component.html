@@ -5,6 +5,7 @@
   class="users-wrapper"
   *ngIf="{
     canClear: canClear$ | async,
+    canSelect: canSelect$ | async,
     deleteDisabled: deleteDisabled$ | async,
     isAllSelected: isAllSelected$ | async,
     users: users$ | async,
@@ -15,6 +16,7 @@
   <mat-divider></mat-divider>
   <app-users-actions-panel
     [canClear]="asyncData.canClear!"
+    [canSelect]="asyncData.canSelect!"
     [deleteDisabled]="asyncData.deleteDisabled!"
     [isAllSelected]="asyncData.isAllSelected!"
     (emitClear)="handleClear()"

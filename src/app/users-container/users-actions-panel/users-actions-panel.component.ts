@@ -19,6 +19,13 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 export class UsersActionsPanelComponent implements OnInit, OnDestroy {
   @Input() canClear = true;
   @Input() deleteDisabled = true;
+  @Input() set canSelect(canSelect: boolean) {
+    if (canSelect) {
+      this.form.get('selectAll')?.enable();
+    } else {
+      this.form.get('selectAll')?.disable();
+    }
+  }
 
   @Input() set isAllSelected(isAllSelected: boolean) {
     this.form.get('selectAll')?.setValue(isAllSelected, { emitEvent: false });
