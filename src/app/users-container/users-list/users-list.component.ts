@@ -18,9 +18,9 @@ import { User } from '../users-store.service';
 })
 export class UsersListComponent {
   @Input() users: User[] = [];
-  @Input() set selectAll(selectAll: boolean) {
+  @Input() set selectAll(selectAll: { checked: boolean }) {
     if (!this.usersList) return;
-    if (selectAll) {
+    if (selectAll.checked) {
       this.usersList.selectAll();
       this.emitSelectedUsers.emit(this.users);
     } else {

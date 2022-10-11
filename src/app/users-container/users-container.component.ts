@@ -11,6 +11,7 @@ import { User, UsersStoreService } from './users-store.service';
 })
 export class UsersContainerComponent implements OnInit {
   deleteDisabled$ = this.store.deleteDisabled$;
+  isAllSelected$ = this.store.isAllSelected$;
   selectAll$ = this.store.selectAll$;
   users$ = this.store.filteredUsers$;
 
@@ -33,7 +34,7 @@ export class UsersContainerComponent implements OnInit {
         { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
       ],
       selectedUsers: [],
-      selectAll: false,
+      selectAll: { checked: false },
       searchTerm: '',
     });
   }

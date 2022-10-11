@@ -10,7 +10,7 @@ export interface User {
 
 export interface UsersState {
   users: User[];
-  selectAll: boolean;
+  selectAll: { checked: boolean };
   selectedUsers: User[];
   searchTerm: string;
 }
@@ -20,7 +20,9 @@ export class UsersStoreService extends ComponentStore<UsersState> {
   // state selectors:
   users$: Observable<User[]> = this.select((s) => s.users);
   selectedUsers$: Observable<User[]> = this.select((s) => s.selectedUsers);
-  selectAll$: Observable<boolean> = this.select((s) => s.selectAll);
+  selectAll$: Observable<{ checked: boolean }> = this.select(
+    (s) => s.selectAll
+  );
   searchTerm$: Observable<string> = this.select((s) => s.searchTerm);
 
   // combined selectors:
@@ -41,13 +43,19 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     }
   );
 
+  isAllSelected$: Observable<boolean> = this.select(
+    this.filteredUsers$,
+    this.selectedUsers$,
+    (filtered, selected) => filtered.length === selected.length
+  );
+
   constructor() {
     super();
   }
 
   // updaters:
-  updateSelectAll(selectAll: boolean) {
-    this.patchState({ selectAll });
+  updateSelectAll(checked: boolean) {
+    this.patchState({ selectAll: { checked } });
   }
 
   updateSearchTerm(searchTerm: string) {
