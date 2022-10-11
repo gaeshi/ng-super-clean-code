@@ -15,6 +15,7 @@ export class UsersContainerComponent implements OnInit {
   canFilterBySelection$ = this.store.canFilterBySelection$;
   canSelect$ = this.store.canSelect$;
   canUnfilter$ = this.store.canUnfilter$;
+  criteria$ = this.store.criteria$;
   deleteDisabled$ = this.store.deleteDisabled$;
   isAllSelected$ = this.store.isAllSelected$;
   isLoading$ = this.store.isLoading$;
@@ -27,14 +28,14 @@ export class UsersContainerComponent implements OnInit {
   ngOnInit(): void {
     this.store.setState({
       count: 0,
+      criteria: initListCriteria(),
       filterType: FilterType.none,
       isLoading: false,
-      searchTerm: '',
       selectAll: { checked: false },
       selectedUsers: [],
       users: [],
     });
-    this.store.listUsers(initListCriteria());
+    this.store.listUsers(this.criteria$);
   }
 
   handleClear() {

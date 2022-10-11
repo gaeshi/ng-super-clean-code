@@ -18,10 +18,10 @@ export interface User {
 
 export interface UsersState {
   count: number;
+  criteria: ListCriteria;
   error?: any;
   filterType: FilterType;
   isLoading: boolean;
-  searchTerm: string;
   selectAll: { checked: boolean };
   selectedUsers: User[];
   users: User[];
@@ -30,10 +30,11 @@ export interface UsersState {
 @Injectable()
 export class UsersStoreService extends ComponentStore<UsersState> {
   // state selectors:
+  criteria$: Observable<ListCriteria> = this.select((s) => s.criteria);
   count$: Observable<number> = this.select((s) => s.count);
   filterType$: Observable<FilterType> = this.select((s) => s.filterType);
   isLoading$: Observable<boolean> = this.select((s) => s.isLoading);
-  searchTerm$: Observable<string> = this.select((s) => s.searchTerm);
+  searchTerm$: Observable<string> = this.select((s) => s.criteria.search);
   selectAll$: Observable<{ checked: boolean }> = this.select(
     (s) => s.selectAll
   );
@@ -46,33 +47,12 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     (selectedUsers) => !!selectedUsers && selectedUsers.length < 1
   );
 
-  filteredBySearch$: Observable<User[]> = this.select(
-    this.users$,
-    this.searchTerm$,
-    (users, searchTerm) => {
-      if (!searchTerm.length) return users;
-      else
-        return users.filter((u) =>
-          u.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }
-  );
-
   filteredUsers$: Observable<User[]> = this.select(
     this.filterType$,
     this.users$,
     this.selectedUsers$,
-    this.filteredBySearch$,
-    (filterType, users, selected, filteredBySearch) => {
-      switch (filterType) {
-        case FilterType.search:
-          return filteredBySearch;
-        case FilterType.selection:
-          return selected;
-        default:
-          return users;
-      }
-    }
+    (filterType, users, selected) =>
+      filterType === FilterType.selection ? selected : users
   );
 
   isAllSelected$: Observable<boolean> = this.select(
@@ -119,7 +99,9 @@ export class UsersStoreService extends ComponentStore<UsersState> {
   }
 
   unfilter() {
-    this.patchState({ filterType: FilterType.none, searchTerm: '' });
+    const currentCriteria = this.get((state) => state.criteria);
+    const criteria = { ...currentCriteria, search: '' };
+    this.patchState({ filterType: FilterType.none, criteria });
   }
 
   updateSelectAll(checked: boolean) {
@@ -131,8 +113,10 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     this.patchState({ selectAll: { checked }, filterType });
   }
 
-  updateSearchTerm(searchTerm: string) {
-    this.patchState({ searchTerm, filterType: FilterType.search });
+  updateSearchTerm(search: string) {
+    const currentCriteria = this.get((state) => state.criteria);
+    const criteria = { ...currentCriteria, search };
+    this.patchState({ criteria, filterType: FilterType.search });
   }
 
   updateSelectedUsers(selectedUsers: User[]) {
