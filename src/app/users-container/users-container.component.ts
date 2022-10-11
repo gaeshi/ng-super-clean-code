@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Sort } from '@angular/material/sort';
 
 import { initListCriteria } from '../users.service';
 import { FilterType, User, UsersStoreService } from './users-store.service';
@@ -60,5 +61,9 @@ export class UsersContainerComponent implements OnInit {
 
   handleUnfilter() {
     this.store.unfilter();
+  }
+
+  handleSort($event: Sort) {
+    this.store.sort($event);
   }
 }

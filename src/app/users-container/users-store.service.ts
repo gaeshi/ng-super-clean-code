@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Sort } from '@angular/material/sort';
 import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable, catchError, switchMap, tap } from 'rxjs';
 
@@ -96,6 +97,17 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     if (this.get((state) => state.selectedUsers.length > 0)) {
       this.patchState({ filterType: FilterType.selection });
     }
+  }
+
+  sort($event: Sort) {
+    const currentCriteria = this.get((state) => state.criteria);
+    const criteria = {
+      ...currentCriteria,
+      sortBy: $event.active,
+      order: $event.direction,
+    };
+
+    this.patchState({ criteria });
   }
 
   unfilter() {

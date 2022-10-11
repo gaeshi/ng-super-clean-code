@@ -36,3 +36,25 @@
     />
   </mat-form-field>
 </div>
+<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="3em">
+  <div
+    matSort
+    (matSortChange)="sortChanged($event)"
+    [matSortDisableClear]="true"
+    matSortActive="createdAt"
+    matSortDirection="asc"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="1em"
+  >
+    <p mat-sort-header="createdAt">Date</p>
+    <p mat-sort-header="name">Name</p>
+    <p mat-sort-header="surname">Surname</p>
+    <p mat-sort-header="email">Email</p>
+  </div>
+  <mat-paginator
+    [hidePageSize]="true"
+    [length]="100"
+    [pageSize]="10"
+  ></mat-paginator>
+</div>

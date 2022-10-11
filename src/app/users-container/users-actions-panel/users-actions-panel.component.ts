@@ -8,6 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Sort } from '@angular/material/sort';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 @Component({
@@ -43,6 +44,7 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
   @Output() emitUnfilter = new EventEmitter<void>();
   @Output() emitSearch = new EventEmitter<string>();
   @Output() emitSelectAll = new EventEmitter<boolean>();
+  @Output() emitSort = new EventEmitter<Sort>();
 
   unsubscribe = new Subject<void>();
 
@@ -81,5 +83,9 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
 
   unfilter() {
     this.emitUnfilter.emit();
+  }
+
+  sortChanged($event: Sort) {
+    this.emitSort.emit($event);
   }
 }
