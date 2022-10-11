@@ -9,6 +9,7 @@
     canSelect: canSelect$ | async,
     canUnfilter: canUnfilter$ | async,
     deleteDisabled: deleteDisabled$ | async,
+    isLoading: isLoading$ | async,
     isAllSelected: isAllSelected$ | async,
     users: users$ | async,
     searchTerm: searchTerm$ | async,
@@ -33,6 +34,7 @@
   ></app-users-actions-panel>
   <mat-divider></mat-divider>
   <app-users-list
+    [isLoading]="asyncData.isLoading!"
     [users]="asyncData.users!"
     [selectAll]="asyncData.selectAll!"
     (emitSelectedUsers)="handleSelectedUsers($event)"

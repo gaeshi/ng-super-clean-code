@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
+import { initListCriteria } from '../users.service';
 import { FilterType, User, UsersStoreService } from './users-store.service';
 
 @Component({
@@ -16,6 +17,7 @@ export class UsersContainerComponent implements OnInit {
   canUnfilter$ = this.store.canUnfilter$;
   deleteDisabled$ = this.store.deleteDisabled$;
   isAllSelected$ = this.store.isAllSelected$;
+  isLoading$ = this.store.isLoading$;
   searchTerm$ = this.store.searchTerm$;
   selectAll$ = this.store.selectAll$;
   users$ = this.store.filteredUsers$;
@@ -24,25 +26,15 @@ export class UsersContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.setState({
+      count: 0,
       filterType: FilterType.none,
+      isLoading: false,
       searchTerm: '',
       selectAll: { checked: false },
       selectedUsers: [],
-      users: [
-        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'Maria', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'Maria', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'Maria', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'Caroline', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'Caroline', surname: 'Doe', email: 'doe@acme.com' },
-        { name: 'John', surname: 'Doe', email: 'doe@acme.com' },
-      ],
+      users: [],
     });
+    this.store.listUsers(initListCriteria());
   }
 
   handleClear() {

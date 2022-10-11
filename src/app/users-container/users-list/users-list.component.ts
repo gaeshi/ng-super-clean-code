@@ -17,7 +17,9 @@ import { User } from '../users-store.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersListComponent {
+  @Input() isLoading = true;
   @Input() users: User[] = [];
+
   @Input() set selectAll(selectAll: { checked: boolean }) {
     if (!this.usersList) return;
     if (selectAll.checked) {

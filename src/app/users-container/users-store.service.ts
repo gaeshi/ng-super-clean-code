@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, catchError, switchMap, tap } from 'rxjs';
+
+import { ListCriteria, UsersService } from '../users.service';
 
 export enum FilterType {
   none = 'none',
@@ -15,7 +17,10 @@ export interface User {
 }
 
 export interface UsersState {
+  count: number;
+  error?: any;
   filterType: FilterType;
+  isLoading: boolean;
   searchTerm: string;
   selectAll: { checked: boolean };
   selectedUsers: User[];
@@ -25,7 +30,9 @@ export interface UsersState {
 @Injectable()
 export class UsersStoreService extends ComponentStore<UsersState> {
   // state selectors:
+  count$: Observable<number> = this.select((s) => s.count);
   filterType$: Observable<FilterType> = this.select((s) => s.filterType);
+  isLoading$: Observable<boolean> = this.select((s) => s.isLoading);
   searchTerm$: Observable<string> = this.select((s) => s.searchTerm);
   selectAll$: Observable<{ checked: boolean }> = this.select(
     (s) => s.selectAll
@@ -96,7 +103,7 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     (selected) => selected.length > 0
   );
 
-  constructor() {
+  constructor(private usersService: UsersService) {
     super();
   }
 
@@ -133,4 +140,23 @@ export class UsersStoreService extends ComponentStore<UsersState> {
   }
 
   // effects:
+  readonly listUsers = this.effect((criteria$: Observable<ListCriteria>) =>
+    criteria$.pipe(
+      tap(() => this.patchState({ isLoading: true })),
+      switchMap((criteria) =>
+        this.usersService.list(criteria).pipe(
+          tap({
+            next: (response) =>
+              this.patchState({
+                isLoading: false,
+                users: response['results'],
+                count: response['count'],
+              }),
+            error: (error) => this.patchState({ error }),
+          }),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  );
 }
