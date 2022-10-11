@@ -33,6 +33,7 @@ export class UsersStoreService extends ComponentStore<UsersState> {
   // state selectors:
   criteria$: Observable<ListCriteria> = this.select((s) => s.criteria);
   count$: Observable<number> = this.select((s) => s.count);
+  error$: Observable<any> = this.select((s) => s.error);
   filterType$: Observable<FilterType> = this.select((s) => s.filterType);
   isLoading$: Observable<boolean> = this.select((s) => s.isLoading);
   limit$: Observable<number> = this.select((s) => s.criteria.limit);
@@ -155,7 +156,7 @@ export class UsersStoreService extends ComponentStore<UsersState> {
                 users: response['results'],
                 count: response['count'],
               }),
-            error: (error) => this.patchState({ error }),
+            error: (error) => this.patchState({ isLoading: false, error }),
           }),
           catchError(() => EMPTY)
         )

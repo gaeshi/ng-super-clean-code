@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Sort } from '@angular/material/sort';
+import { Subject, filter, takeUntil } from 'rxjs';
 
 import { initListCriteria } from '../users.service';
 import { FilterType, User, UsersStoreService } from './users-store.service';
@@ -11,13 +18,16 @@ import { FilterType, User, UsersStoreService } from './users-store.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UsersStoreService],
 })
-export class UsersContainerComponent implements OnInit {
+export class UsersContainerComponent implements OnInit, OnDestroy {
+  private unsubscribe = new Subject<void>();
+
   canClear$ = this.store.canClear$;
   canFilterBySelection$ = this.store.canFilterBySelection$;
   canSelect$ = this.store.canSelect$;
   canUnfilter$ = this.store.canUnfilter$;
   count$ = this.store.count$;
   criteria$ = this.store.criteria$;
+  error$ = this.store.error$.pipe(filter((e) => !!e));
   deleteDisabled$ = this.store.deleteDisabled$;
   isAllSelected$ = this.store.isAllSelected$;
   isLoading$ = this.store.isLoading$;
@@ -26,7 +36,10 @@ export class UsersContainerComponent implements OnInit {
   selectAll$ = this.store.selectAll$;
   users$ = this.store.filteredUsers$;
 
-  constructor(private store: UsersStoreService) {}
+  constructor(
+    private store: UsersStoreService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.store.setState({
@@ -39,6 +52,15 @@ export class UsersContainerComponent implements OnInit {
       users: [],
     });
     this.store.listUsers(this.criteria$);
+    this.error$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((e) =>
+        this.snackBar.open(e.message, 'Close', { duration: 2500 })
+      );
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.next();
   }
 
   handleClear() {
