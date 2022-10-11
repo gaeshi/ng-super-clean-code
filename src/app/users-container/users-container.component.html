@@ -8,9 +8,11 @@
     canFilterBySelection: canFilterBySelection$ | async,
     canSelect: canSelect$ | async,
     canUnfilter: canUnfilter$ | async,
+    count: count$ | async,
     deleteDisabled: deleteDisabled$ | async,
     isLoading: isLoading$ | async,
     isAllSelected: isAllSelected$ | async,
+    limit: limit$ | async,
     users: users$ | async,
     searchTerm: searchTerm$ | async,
     selectAll: selectAll$ | async
@@ -23,11 +25,14 @@
     [canFilterBySelection]="asyncData.canFilterBySelection!"
     [canSelect]="asyncData.canSelect!"
     [canUnfilter]="asyncData.canUnfilter!"
+    [count]="asyncData.count!"
     [deleteDisabled]="asyncData.deleteDisabled!"
     [isAllSelected]="asyncData.isAllSelected!"
+    [limit]="asyncData.limit!"
     [searchTerm]="asyncData.searchTerm!"
     (emitClear)="handleClear()"
     (emitFilterBySelection)="handleEmitFilterBySelection()"
+    (emitPageIndex)="handlePageIndex($event)"
     (emitSearch)="handleSearch($event)"
     (emitSelectAll)="handleSelectAll($event)"
     (emitSort)="handleSort($event)"

@@ -8,6 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
@@ -21,7 +22,9 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
   @Input() canClear = true;
   @Input() canFilterBySelection = true;
   @Input() canUnfilter = true;
+  @Input() count = 0;
   @Input() deleteDisabled = true;
+  @Input() limit = 0;
 
   @Input() set canSelect(canSelect: boolean) {
     if (canSelect) {
@@ -41,10 +44,11 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
 
   @Output() emitClear = new EventEmitter<void>();
   @Output() emitFilterBySelection = new EventEmitter<void>();
-  @Output() emitUnfilter = new EventEmitter<void>();
+  @Output() emitPageIndex = new EventEmitter<number>();
   @Output() emitSearch = new EventEmitter<string>();
   @Output() emitSelectAll = new EventEmitter<boolean>();
   @Output() emitSort = new EventEmitter<Sort>();
+  @Output() emitUnfilter = new EventEmitter<void>();
 
   unsubscribe = new Subject<void>();
 
@@ -81,11 +85,15 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
     this.emitFilterBySelection.emit();
   }
 
-  unfilter() {
-    this.emitUnfilter.emit();
+  pageChanged($event: PageEvent) {
+    this.emitPageIndex.emit($event.pageIndex + 1);
   }
 
   sortChanged($event: Sort) {
     this.emitSort.emit($event);
+  }
+
+  unfilter() {
+    this.emitUnfilter.emit();
   }
 }

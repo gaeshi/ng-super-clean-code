@@ -16,10 +16,12 @@ export class UsersContainerComponent implements OnInit {
   canFilterBySelection$ = this.store.canFilterBySelection$;
   canSelect$ = this.store.canSelect$;
   canUnfilter$ = this.store.canUnfilter$;
+  count$ = this.store.count$;
   criteria$ = this.store.criteria$;
   deleteDisabled$ = this.store.deleteDisabled$;
   isAllSelected$ = this.store.isAllSelected$;
   isLoading$ = this.store.isLoading$;
+  limit$ = this.store.limit$;
   searchTerm$ = this.store.searchTerm$;
   selectAll$ = this.store.selectAll$;
   users$ = this.store.filteredUsers$;
@@ -59,11 +61,15 @@ export class UsersContainerComponent implements OnInit {
     this.store.filterBySelection();
   }
 
-  handleUnfilter() {
-    this.store.unfilter();
+  handlePageIndex(pageIndex: number) {
+    this.store.updatePage(pageIndex);
   }
 
   handleSort($event: Sort) {
     this.store.sort($event);
+  }
+
+  handleUnfilter() {
+    this.store.unfilter();
   }
 }

@@ -35,6 +35,7 @@ export class UsersStoreService extends ComponentStore<UsersState> {
   count$: Observable<number> = this.select((s) => s.count);
   filterType$: Observable<FilterType> = this.select((s) => s.filterType);
   isLoading$: Observable<boolean> = this.select((s) => s.isLoading);
+  limit$: Observable<number> = this.select((s) => s.criteria.limit);
   searchTerm$: Observable<string> = this.select((s) => s.criteria.search);
   selectAll$: Observable<{ checked: boolean }> = this.select(
     (s) => s.selectAll
@@ -114,6 +115,12 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     const currentCriteria = this.get((state) => state.criteria);
     const criteria = { ...currentCriteria, search: '' };
     this.patchState({ filterType: FilterType.none, criteria });
+  }
+
+  updatePage(page: number) {
+    const currentCriteria = this.get((state) => state.criteria);
+    const criteria = { ...currentCriteria, page };
+    this.patchState({ criteria });
   }
 
   updateSelectAll(checked: boolean) {

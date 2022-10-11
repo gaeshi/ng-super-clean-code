@@ -54,7 +54,8 @@
   </div>
   <mat-paginator
     [hidePageSize]="true"
-    [length]="100"
-    [pageSize]="10"
+    [length]="count"
+    [pageSize]="limit"
+    (page)="pageChanged($event)"
   ></mat-paginator>
 </div>
