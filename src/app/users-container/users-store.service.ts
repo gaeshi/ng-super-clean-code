@@ -86,6 +86,11 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     (filtered) => filtered.length > 0
   );
 
+  canUnfilter$: Observable<boolean> = this.select(
+    this.filterType$,
+    (filterType) => filterType !== FilterType.none
+  );
+
   canFilterBySelection$: Observable<boolean> = this.select(
     this.selectedUsers$,
     (selected) => selected.length > 0
@@ -104,6 +109,10 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     if (this.get((state) => state.selectedUsers.length > 0)) {
       this.patchState({ filterType: FilterType.selection });
     }
+  }
+
+  unfilter() {
+    this.patchState({ filterType: FilterType.none, searchTerm: '' });
   }
 
   updateSelectAll(checked: boolean) {

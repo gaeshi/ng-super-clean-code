@@ -13,8 +13,10 @@ export class UsersContainerComponent implements OnInit {
   canClear$ = this.store.canClear$;
   canFilterBySelection$ = this.store.canFilterBySelection$;
   canSelect$ = this.store.canSelect$;
+  canUnfilter$ = this.store.canUnfilter$;
   deleteDisabled$ = this.store.deleteDisabled$;
   isAllSelected$ = this.store.isAllSelected$;
+  searchTerm$ = this.store.searchTerm$;
   selectAll$ = this.store.selectAll$;
   users$ = this.store.filteredUsers$;
 
@@ -61,5 +63,9 @@ export class UsersContainerComponent implements OnInit {
 
   handleEmitFilterBySelection() {
     this.store.filterBySelection();
+  }
+
+  handleUnfilter() {
+    this.store.unfilter();
   }
 }

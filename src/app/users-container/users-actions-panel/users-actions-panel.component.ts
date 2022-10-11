@@ -18,8 +18,10 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 })
 export class UsersActionsPanelComponent implements OnInit, OnDestroy {
   @Input() canClear = true;
-  @Input() deleteDisabled = true;
   @Input() canFilterBySelection = true;
+  @Input() canUnfilter = true;
+  @Input() deleteDisabled = true;
+
   @Input() set canSelect(canSelect: boolean) {
     if (canSelect) {
       this.form.get('selectAll')?.enable();
@@ -32,8 +34,13 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
     this.form.get('selectAll')?.setValue(isAllSelected, { emitEvent: false });
   }
 
+  @Input() set searchTerm(term: string) {
+    this.form.get('search')?.setValue(term, { emitEvent: false });
+  }
+
   @Output() emitClear = new EventEmitter<void>();
   @Output() emitFilterBySelection = new EventEmitter<void>();
+  @Output() emitUnfilter = new EventEmitter<void>();
   @Output() emitSearch = new EventEmitter<string>();
   @Output() emitSelectAll = new EventEmitter<boolean>();
 
@@ -70,5 +77,9 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
 
   filterBySelection() {
     this.emitFilterBySelection.emit();
+  }
+
+  unfilter() {
+    this.emitUnfilter.emit();
   }
 }

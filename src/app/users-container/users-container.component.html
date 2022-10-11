@@ -7,9 +7,11 @@
     canClear: canClear$ | async,
     canFilterBySelection: canFilterBySelection$ | async,
     canSelect: canSelect$ | async,
+    canUnfilter: canUnfilter$ | async,
     deleteDisabled: deleteDisabled$ | async,
     isAllSelected: isAllSelected$ | async,
     users: users$ | async,
+    searchTerm: searchTerm$ | async,
     selectAll: selectAll$ | async
   } as asyncData"
 >
@@ -19,12 +21,15 @@
     [canClear]="asyncData.canClear!"
     [canFilterBySelection]="asyncData.canFilterBySelection!"
     [canSelect]="asyncData.canSelect!"
+    [canUnfilter]="asyncData.canUnfilter!"
     [deleteDisabled]="asyncData.deleteDisabled!"
     [isAllSelected]="asyncData.isAllSelected!"
+    [searchTerm]="asyncData.searchTerm!"
     (emitClear)="handleClear()"
     (emitFilterBySelection)="handleEmitFilterBySelection()"
     (emitSearch)="handleSearch($event)"
     (emitSelectAll)="handleSelectAll($event)"
+    (emitUnfilter)="handleUnfilter()"
   ></app-users-actions-panel>
   <mat-divider></mat-divider>
   <app-users-list

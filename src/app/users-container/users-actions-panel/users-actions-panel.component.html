@@ -16,6 +16,14 @@
   >
     <mat-icon>filter_list</mat-icon>
   </button>
+  <button
+    mat-mini-fab
+    color="primary"
+    [disabled]="!canUnfilter"
+    (click)="unfilter()"
+  >
+    <mat-icon>filter_list_off</mat-icon>
+  </button>
   <button mat-mini-fab color="warn" [disabled]="deleteDisabled">
     <mat-icon>delete</mat-icon>
   </button>
