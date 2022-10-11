@@ -19,6 +19,7 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 export class UsersActionsPanelComponent implements OnInit, OnDestroy {
   @Input() canClear = true;
   @Input() deleteDisabled = true;
+  @Input() canFilterBySelection = true;
   @Input() set canSelect(canSelect: boolean) {
     if (canSelect) {
       this.form.get('selectAll')?.enable();
@@ -32,6 +33,7 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
   }
 
   @Output() emitClear = new EventEmitter<void>();
+  @Output() emitFilterBySelection = new EventEmitter<void>();
   @Output() emitSearch = new EventEmitter<string>();
   @Output() emitSelectAll = new EventEmitter<boolean>();
 
@@ -64,5 +66,9 @@ export class UsersActionsPanelComponent implements OnInit, OnDestroy {
 
   clear() {
     this.emitClear.emit();
+  }
+
+  filterBySelection() {
+    this.emitFilterBySelection.emit();
   }
 }

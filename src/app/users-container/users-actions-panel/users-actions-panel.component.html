@@ -8,6 +8,14 @@
   <button mat-mini-fab color="white" [disabled]="!canClear" (click)="clear()">
     <mat-icon>clear</mat-icon>
   </button>
+  <button
+    mat-mini-fab
+    color="primary"
+    [disabled]="!canFilterBySelection"
+    (click)="filterBySelection()"
+  >
+    <mat-icon>filter_list</mat-icon>
+  </button>
   <button mat-mini-fab color="warn" [disabled]="deleteDisabled">
     <mat-icon>delete</mat-icon>
   </button>

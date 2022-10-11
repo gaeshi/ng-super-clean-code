@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { Observable } from 'rxjs';
 
+export enum FilterType {
+  none = 'none',
+  search = 'search',
+  selection = 'selection',
+}
+
 export interface User {
   name: string;
   surname: string;
@@ -9,21 +15,23 @@ export interface User {
 }
 
 export interface UsersState {
-  users: User[];
+  filterType: FilterType;
+  searchTerm: string;
   selectAll: { checked: boolean };
   selectedUsers: User[];
-  searchTerm: string;
+  users: User[];
 }
 
 @Injectable()
 export class UsersStoreService extends ComponentStore<UsersState> {
   // state selectors:
-  users$: Observable<User[]> = this.select((s) => s.users);
-  selectedUsers$: Observable<User[]> = this.select((s) => s.selectedUsers);
+  filterType$: Observable<FilterType> = this.select((s) => s.filterType);
+  searchTerm$: Observable<string> = this.select((s) => s.searchTerm);
   selectAll$: Observable<{ checked: boolean }> = this.select(
     (s) => s.selectAll
   );
-  searchTerm$: Observable<string> = this.select((s) => s.searchTerm);
+  selectedUsers$: Observable<User[]> = this.select((s) => s.selectedUsers);
+  users$: Observable<User[]> = this.select((s) => s.users);
 
   // combined selectors:
   deleteDisabled$: Observable<boolean> = this.select(
@@ -31,7 +39,7 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     (selectedUsers) => !!selectedUsers && selectedUsers.length < 1
   );
 
-  filteredUsers$: Observable<User[]> = this.select(
+  filteredBySearch$: Observable<User[]> = this.select(
     this.users$,
     this.searchTerm$,
     (users, searchTerm) => {
@@ -40,6 +48,23 @@ export class UsersStoreService extends ComponentStore<UsersState> {
         return users.filter((u) =>
           u.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
+    }
+  );
+
+  filteredUsers$: Observable<User[]> = this.select(
+    this.filterType$,
+    this.users$,
+    this.selectedUsers$,
+    this.filteredBySearch$,
+    (filterType, users, selected, filteredBySearch) => {
+      switch (filterType) {
+        case FilterType.search:
+          return filteredBySearch;
+        case FilterType.selection:
+          return selected;
+        default:
+          return users;
+      }
     }
   );
 
@@ -61,6 +86,11 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     (filtered) => filtered.length > 0
   );
 
+  canFilterBySelection$: Observable<boolean> = this.select(
+    this.selectedUsers$,
+    (selected) => selected.length > 0
+  );
+
   constructor() {
     super();
   }
@@ -70,12 +100,23 @@ export class UsersStoreService extends ComponentStore<UsersState> {
     this.patchState({ selectAll: { checked: false }, selectedUsers: [] });
   }
 
+  filterBySelection() {
+    if (this.get((state) => state.selectedUsers.length > 0)) {
+      this.patchState({ filterType: FilterType.selection });
+    }
+  }
+
   updateSelectAll(checked: boolean) {
-    this.patchState({ selectAll: { checked } });
+    const currentFilterType = this.get((state) => state.filterType);
+    const filterType =
+      currentFilterType === FilterType.selection
+        ? FilterType.none
+        : currentFilterType;
+    this.patchState({ selectAll: { checked }, filterType });
   }
 
   updateSearchTerm(searchTerm: string) {
-    this.patchState({ searchTerm });
+    this.patchState({ searchTerm, filterType: FilterType.search });
   }
 
   updateSelectedUsers(selectedUsers: User[]) {
